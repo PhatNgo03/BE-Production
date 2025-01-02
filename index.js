@@ -8,7 +8,6 @@ app.set("view engine", "pug");
 
 //Routes
 route(app);
-cc
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);

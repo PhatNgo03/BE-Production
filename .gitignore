@@ -1,0 +1,12 @@
+# Bỏ qua thư mục node_modules
+node_modules/
+
+# File log
+*.log
+
+# File môi trường (nếu có sử dụng)
+.env
+
+# File hệ thống (dành cho MacOS, Windows)
+.DS_Store
+Thumbs.db

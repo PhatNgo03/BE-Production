@@ -56,3 +56,22 @@
 }
 
 /* Sider */
+
+/* Badge */
+.badge-success {
+    text-decoration: none;
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .badge-danger {
+    text-decoration: none;
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+/* end Badge */

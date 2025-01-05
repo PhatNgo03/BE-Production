@@ -22,7 +22,7 @@ module.exports.index =  async(req, res) => {
   ]
   // console.log(req.query.status);
   let find = {
-    delete : false
+    delete : false,
   }
 
   //filterStatus
@@ -39,11 +39,20 @@ module.exports.index =  async(req, res) => {
     find.status = req.query.status;
   }
 
+  //keyword search
+  let keyword= "";
+  if(req.query.keyword){
+    keyword = req.query.keyword;
+
+    const regex = new RegExp(keyword, "i");
+    find.title = regex;
+  }
   const products = await Product.find(find)
   // console.log(products);
   res.render("admin/pages/products/index.pug", {
     pageTitle: "Trang danh sách sản phẩm",
     products : products,
-    filterStatus: filterStatus
+    filterStatus: filterStatus,
+    keyword: keyword
 })
 }

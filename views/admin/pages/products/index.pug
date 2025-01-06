@@ -1,11 +1,11 @@
 extends ../../layouts/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
-
+include ../../mixins/pagination.pug
 block main
   h1 Danh sách sản phẩm
 
-  .card.mb-3
+  .card.mb-3  
     .card-header Bộ lọc và tìm kiếm
     .card-body
       .row
@@ -49,3 +49,4 @@ block main
               td
                 button(class="btn btn-warning btn-sm mx-1") Sửa
                 button(class="btn btn-danger btn-sm") Xóa
+  +pagination(pagination)

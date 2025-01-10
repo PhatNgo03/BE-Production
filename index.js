@@ -6,7 +6,9 @@ const database = require("./config/database");
 const systemConfig = require("./config/system");
 const methodOverride = require("method-override");
 const bodyParser = require('body-parser');
-
+const flash = require("express-flash");
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 database.connect();
 const app = express();
 //override method CRUD 
@@ -18,6 +20,11 @@ const port = process.env.PORT;
 
 app.set("views", "./views");
 app.set("view engine", "pug");
+
+//Flash notification 
+app.use(cookieParser('eedf3c58-e8ce-47d1-9fc4-43b66fb2eb0d'));
+app.use(session({ cookie: { maxAge: 60000 }}));
+app.use(flash());
 
 //App Local Variable
 app.locals.prefixAdmin = systemConfig.prefixAdmin;

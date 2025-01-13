@@ -111,3 +111,53 @@
     cursor: pointer;
 }
 /*  End Show alert */
+
+.custom-file {
+    display: block; /* Đảm bảo .custom-file chiếm toàn bộ chiều rộng */
+    margin-top: 5px; /* Khoảng cách giữa label và input */
+  }
+
+/*End image preview*/
+ 
+/* Container for image and button */
+ .image-preview-container {
+    position: relative;
+    width: 250px; 
+    height: auto;
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    display: block;
+  }
+
+  
+  /* Image preview */
+  .image-preview {
+    width: 100%; /* Image will take the full width of the container */
+    height: auto;
+  }
+  
+  /* "X" button styling */
+  .upload-image-remove {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 5px; /* Distance from the top of the image */
+    right: 5px; /* Distance from the right edge of the image */
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Make the button circular */
+    width: 30px; /* Size of the button */
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Show "X" button when image is present */
+  .image-preview[src] + .upload-image-remove {
+    display: block; /* Make the "X" button visible when an image is loaded */
+  }
+  

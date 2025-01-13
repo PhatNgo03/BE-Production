@@ -132,16 +132,6 @@ module.exports.create =  async(req, res) => {
 module.exports.createPost =  async(req, res) => {
   // console.log(req.file);
 
-  if(!req.body.title){
-    req.flash("error", 'Vui lòng nhập tiêu đề!');
-    res.redirect("back");
-    return;
-  }
-  // if(req.body.title.length < 8){
-  //   req.flash("error", 'Vui lòng nhập tiêu đề ít nhất 8 kí tự! ');
-  //   res.redirect("back");
-  //   return;
-  // }
   req.body.price= parseInt(req.body.price);
   req.body.discountPercentage= parseInt(req.body.discountPercentage);
   req.body.stock= parseInt(req.body.stock);
@@ -161,3 +151,49 @@ module.exports.createPost =  async(req, res) => {
   await product.save();
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 }
+
+// [GET] /admin/products/edit/:"id"
+module.exports.edit =  async(req, res) => {
+  // console.log(req.params.id);
+  try{
+  const find = {
+    delete : false,
+    _id: req.params.id
+  }
+  const product = await Product.findOne(find);
+  if (!product) {
+    req.flash("error", "Không tìm thấy sản phẩm cần chỉnh sửa!"); 
+    return res.redirect(`${systemConfig.prefixAdmin}/products`);
+  }
+  res.render("admin/pages/products/edit", {
+    pageTitle: "Chỉnh sửa sản phẩm ",
+    product: product,
+  });
+  } catch(error){
+    req.flash("error", "Đã xảy ra lỗi khi tìm kiếm sản phẩm!");
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+  }
+};
+
+// [PATCH] /admin/products/edit/:"id"
+module.exports.editPatch = async (req, res) => {
+  const id = req.params.id;
+  req.body.price = parseInt(req.body.price);
+  req.body.discountPercentage = parseInt(req.body.discountPercentage);
+  req.body.stock = parseInt(req.body.stock);
+
+  if (req.file) {
+    req.body.thumbnail = `/uploads/${req.file.filename}`;
+  }
+
+  try {
+    await Product.updateOne({ _id: id }, req.body);
+    console.log(req.flash("success"));
+    req.flash("success", "Cập nhật sản phẩm thành công!"); 
+  } catch (error) {
+    req.flash("error", "Cập nhật sản phẩm thất bại!");
+  }
+
+  res.redirect("back");
+};
+

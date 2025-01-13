@@ -18,5 +18,11 @@ router.post(
    controller.createPost
 
 ); // return create item
-
+router.get("/edit/:id", controller.edit);
+router.patch(
+  "/edit/:id",
+  upload.single("thumbnail"),
+  controller.editPatch,
+  validate.createPost,
+  );
 module.exports = router;

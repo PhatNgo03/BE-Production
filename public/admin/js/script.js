@@ -1,4 +1,3 @@
-//Button status product
 const buttonStatus = document.querySelectorAll("[button-status]");
 if(buttonStatus.length > 0){
     let url = new URL(window.location.href);

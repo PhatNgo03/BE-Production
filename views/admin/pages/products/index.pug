@@ -90,8 +90,10 @@ block main
                       button-change-status
                     ) Dừng hoạt động
                 td
-                  button(class="btn btn-warning btn-sm mx-1") Sửa
-                  button(
+                  a(
+                  href=`${prefixAdmin}/products/edit/${item.id}`
+                  class="btn btn-warning btn-sm mx-1") Sửa
+                  a(
                     class="btn btn-danger btn-sm"
                     data-id = item.id
                     button-delete

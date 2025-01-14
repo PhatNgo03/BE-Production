@@ -208,7 +208,7 @@ module.exports.detail =  async(req, res) => {
   }
   const product = await Product.findOne(find);
 
-  console.log(product);
+  // console.log(product);
   if (!product) {
     req.flash("error", "Không tìm thấy sản phẩm!"); 
     return res.redirect(`${systemConfig.prefixAdmin}/products`);

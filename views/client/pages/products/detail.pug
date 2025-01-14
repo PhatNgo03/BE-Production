@@ -1,0 +1,48 @@
+extends ../../layouts/default.pug  
+
+block main 
+  .container.my-3 
+    .row 
+      .col-12 
+        if (product.title)
+          h1(class="mb-4 text-primary border-bottom pb-2") #{product.title}
+
+        .card.shadow-lg.p-4.mb-4.bg-light.rounded
+          if (product.price)
+            div(class="mb-3 d-flex align-items-center")
+              span(class="me-2 text-muted fw-bold") Giá:
+              b.text-dark #{product.price}$
+
+          if (product.discountPercentage)
+            div(class="mb-3 d-flex align-items-center")
+              span(class="me-2 text-muted fw-bold") Giảm Giá:
+              b.text-success #{product.discountPercentage}%
+
+          if (product.stock)
+            div(class="mb-3 d-flex align-items-center")
+              span(class="me-2 text-muted fw-bold") Còn lại:
+              b.text-dark #{product.stock}
+
+          if (product.thumbnail)
+            div(class="mb-4 ")
+              img(
+                src=product.thumbnail 
+                class="rounded shadow-sm"
+                style="width: 150px; border: 2px solid #ddd;"
+              )
+
+          if (product.position)
+            div(class="mb-3 d-flex align-items-center")
+              span(class="me-2 text-muted fw-bold") Vị trí:
+              b.text-dark #{product.position}
+
+          if (product.description)
+            div(class="mb-3")
+              span(class="text-muted fw-bold") 
+              p.text-dark.mt-2 #{product.description}
+
+          div(class="text-end mt-4")
+            a(
+              href=`${prefixAdmin}/products/edit/${product.id}`
+              class="btn btn-warning btn-sm"
+            ) Sửa

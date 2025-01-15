@@ -144,9 +144,9 @@ module.exports.createPost =  async(req, res) => {
     req.body.position= parseInt(req.body.position);
   }
 
-  if(req.file){
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-  }
+  // if(req.file){
+  //   req.body.thumbnail = `/uploads/${req.file.filename}`;
+  // }
   const product = new Product(req.body);
   await product.save();
     res.redirect(`${systemConfig.prefixAdmin}/products`);
@@ -161,10 +161,7 @@ module.exports.edit =  async(req, res) => {
     _id: req.params.id
   }
   const product = await Product.findOne(find);
-  if (!product) {
-    req.flash("error", "Không tìm thấy sản phẩm cần chỉnh sửa!"); 
-    return res.redirect(`${systemConfig.prefixAdmin}/products`);
-  }
+ 
   res.render("admin/pages/products/edit", {
     pageTitle: "Chỉnh sửa sản phẩm ",
     product: product,
@@ -182,9 +179,9 @@ module.exports.editPatch = async (req, res) => {
   req.body.discountPercentage = parseInt(req.body.discountPercentage);
   req.body.stock = parseInt(req.body.stock);
 
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-  }
+  // if (req.file) {
+  //   req.body.thumbnail = `/uploads/${req.file.filename}`;
+  // }
 
   try {
     await Product.updateOne({ _id: id }, req.body);

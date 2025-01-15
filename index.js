@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 require('dotenv').config();
 const routeAdmin = require("./routes/admin/index.route");
 const route = require("./routes/client/index.route");
@@ -26,6 +27,10 @@ app.set("view engine", "pug");
 app.use(cookieParser('eedf3c58-e8ce-47d1-9fc4-43b66fb2eb0d'));
 app.use(session({ cookie: { maxAge: 60000 }}));
 app.use(flash());
+
+//TinyMCE
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+//End TinyMCE
 
 //App Local Variable
 app.locals.prefixAdmin = systemConfig.prefixAdmin;

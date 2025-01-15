@@ -53,8 +53,10 @@ module.exports.index =  async(req, res) => {
   }else {
     sort.position = "desc";
   }
+
   //End sort
 
+  
   const products = await Product.find(find)
   .sort(sort)
   .limit(objectPagination.limitItems).skip(objectPagination.skip);

@@ -45,7 +45,6 @@ if(buttonPagination){
     let url = new URL(window.location.href);
     button.addEventListener("click", () => {
       const page = button.getAttribute("button-pagination");
-1
       url.searchParams.set("page", page);
       window.location.href =  url.href; // chuyen huong den trang page hien tai
     });
@@ -94,5 +93,44 @@ if (uploadImage) {
 
   });
 }
-
 // End Upload images
+
+//Sort
+const sort = document.querySelector("[sort]");
+if(sort){
+  let url = new URL(window.location.href);
+  
+  const sortSelect = sort.querySelector("[sort-select]");
+  const sortClear = sort.querySelector("[sort-clear]");
+
+  sortSelect.addEventListener("change", (e) => {
+    const value = e.target.value;
+    const [sortKey, sortValue] = value.split("-");
+    console.log(sortKey);
+    console.log(sortValue);
+    url.searchParams.set("sortKey", sortKey);
+    url.searchParams.set("sortValue", sortValue);
+    window.location.href =  url.href; 
+  })
+  //Sort clear
+  sortClear.addEventListener("click", () => {
+    url.searchParams.delete("sortKey");
+    url.searchParams.delete("sortValue");
+    window.location.href =  url.href; 
+  })
+
+  //Them selected cho option
+
+  const sortKey = url.searchParams.get("sortKey");
+  const sortValue = url.searchParams.get("sortValue");
+  if(sortKey && sortValue){
+    const stringSort = `${sortKey}-${sortValue}`;
+    const optionSelected = sortSelect.querySelector(`option[value='${stringSort}']`);
+    optionSelected.selected = true;
+  }
+//End Clear sort
+}
+
+ 
+
+//End Sort

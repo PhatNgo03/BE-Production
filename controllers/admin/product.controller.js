@@ -45,9 +45,18 @@ module.exports.index =  async(req, res) => {
   // objectPagination.totalPage = totalPage;
   // End Pagination 
 
+  //Sort 
+  let sort = {};
+
+  if(req.query.sortKey && req.query.sortValue) {
+     sort[req.query.sortKey] = req.query.sortValue;
+  }else {
+    sort.position = "desc";
+  }
+  //End sort
 
   const products = await Product.find(find)
-  .sort({position : "desc"})
+  .sort(sort)
   .limit(objectPagination.limitItems).skip(objectPagination.skip);
   // console.log(products);
   res.render("admin/pages/products/index.pug", {
@@ -118,8 +127,6 @@ module.exports.deleteItem = async (req, res) => {
   req.flash('success', `Đã xóa sản phẩm thành công!`);
   res.redirect("back");
 }
-
-
 
 // [GET] /admin/products/create
 module.exports.create =  async(req, res) => {

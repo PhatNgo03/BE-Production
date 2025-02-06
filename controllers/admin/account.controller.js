@@ -62,28 +62,47 @@ module.exports.edit =  async(req, res) => {
     delete : false,
     _id: req.params.id
   }
-  const roles = await Role.findOne(find);
-
-  res.render("admin/pages/roles/edit", {
-    pageTitle: "Chỉnh sửa nhóm quyền",
-    roles: roles,
+  const accounts = await Account.findOne(find);
+  const roles = await Role.find({
+    delete: false,
+  });
+  res.render("admin/pages/accounts/edit", {
+    pageTitle: "Chỉnh sửa tài khoản",
+    accounts: accounts,
+    roles: roles
   });
   } catch(error){
-    req.flash("error", "Đã xảy ra lỗi khi tìm kiếm danh mục sản phẩm!");
-    res.redirect(`${systemConfig.prefixAdmin}/roles`);
+    req.flash("error", "Đã xảy ra lỗi khi chỉnh sửa tài khoản!");
+    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
   }
 };
 
-// [PATCH] /admin/products/edit/:"id"
+// [PATCH] /admin/accounts/edit/:"id"
 module.exports.editPatch = async (req, res) => {
-  const id = req.params.id;
-  try {
-    await Role.updateOne({ _id: id }, req.body);
-    req.flash("success", "Cập nhật danh mục sản phẩm thành công!"); 
-  } catch (error) {
-    req.flash("error", "Cập nhật danh mục sản phẩm thất bại!");
+  
+  const emailExist = await Account.findOne({
+    _id: {$ne: id}, //ne = not equal
+    email: req.body.email,
+    delete: false
+  })
+  if(emailExist){
+    req.flash("error", `Email ${req.body.email} đã tồn tại!`);
   }
-
+  else {
+    if(req.body.password){
+      req.body.password = md5(req.body.password);
+    }
+    else {
+      delete req.body.password;
+    }
+    const id = req.params.id;
+    try {
+      await Account.updateOne({ _id: id }, req.body);
+      req.flash("success", "Cập nhật tài khoản thành công!"); 
+    } catch (error) {
+      req.flash("error", "Cập nhật tài khoản thất bại!");
+    }
+  }
   res.redirect("back");
 };
 

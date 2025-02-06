@@ -2,36 +2,42 @@ const Account = require("../../models/account.model");
 const Role = require("../../models/role.model")
 const systemConfig = require("../../config/system");
 const md5 = require('md5');
-// [GET] /admin/accounts
-module.exports.index = async (req, res) => {
-  let find = {
-    delete :false
-  }
-  const records = await Account.find(find).select("-password -token");
 
-  for (const record of records){
-    const role = await Role.findOne({
-      _id: record.role_id,
-      delete: false
-    });
-    record.role = role;
-  }
-  res.render("./admin/pages/accounts/index.pug", {
-      pageTitle: "Danh sách tài khoản",
-      records : records
+// [GET] /admin/auth/login
+module.exports.login = async (req, res) => {
+  res.render("./admin/pages/auth/login.pug", {
+      pageTitle: "Đăng nhập",
   })
 }
 
-// [GET] /admin/accounts/create
-module.exports.create = async (req, res) => {
+// [POST] /admin/auth/login
+module.exports.loginPost = async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  // const {email, password} = req.body;
 
-  const roles = await Role.find({
-    delete :false
-  })
-  res.render("./admin/pages/accounts/create.pug", {
-      pageTitle: "Tạo mới tài khoản",
-      roles: roles
-  })
+  const user = await Account.findOne({
+    email: email,
+    delete : false
+  });
+  if(!user) {
+    req.flash("error", "Email hoặc mật khẩu không hợp lệ!");
+    res.redirect("back");
+    return;
+  }
+  if(md5(password) != user.password){
+    req.flash("error", "Email hoặc mật khẩu không hợp lệ!");
+    res.redirect("back");
+    return;
+  }
+  if(user.status == "inactive"){
+    req.flash("error", "Tài khoản đã bị khóa");
+    res.redirect("back");
+    return;
+  }
+  res.cookie("token", user.token)
+  res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+ 
 }
 
 // [GET] /admin/accounts/create
@@ -79,7 +85,7 @@ module.exports.edit =  async(req, res) => {
 
 // [PATCH] /admin/accounts/edit/:"id"
 module.exports.editPatch = async (req, res) => {
-  const id = req.params.id;
+  
   const emailExist = await Account.findOne({
     _id: {$ne: id}, //ne = not equal
     email: req.body.email,
@@ -95,6 +101,7 @@ module.exports.editPatch = async (req, res) => {
     else {
       delete req.body.password;
     }
+    const id = req.params.id;
     try {
       await Account.updateOne({ _id: id }, req.body);
       req.flash("success", "Cập nhật tài khoản thành công!"); 
@@ -103,4 +110,31 @@ module.exports.editPatch = async (req, res) => {
     }
   }
   res.redirect("back");
+};
+
+// [Get] /admin/roles/permission"
+module.exports.permissions = async (req, res) => {
+  let find = {
+    delete :false 
+  }
+  const records = await Role.find(find);
+  res.render("admin/pages/roles/permissions", {
+    pageTitle: "Phân quyền",
+    records: records,
+  });
+};
+
+// [PATCH] /admin/roles/permissionsPatch"
+module.exports.permissionsPatch = async (req, res) => {
+  const permissions = JSON.parse(req.body.permissions);
+  try{
+    for(const item of permissions){
+      await Role.updateOne({_id: item.id}, {permissions: item.permissions})
+    }
+    req.flash("success", "Cập nhật phân quyền thành công!"); 
+    res.redirect("back");
+  }
+  catch(error){
+    req.flash("error", "Cập nhật phân quyền thất bại!");
+  }
 };

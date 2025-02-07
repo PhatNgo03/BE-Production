@@ -1,4 +1,5 @@
 const Product = require("../../models/product.model")
+const Account = require("../../models/account.model")
 const filterStatusHelper = require("../../helpers/filterStatus");
 const searchHelper = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
@@ -64,6 +65,16 @@ module.exports.index =  async(req, res) => {
   const products = await Product.find(find)
   .sort(sort)
   .limit(objectPagination.limitItems).skip(objectPagination.skip);
+
+  for(const product of products){
+    const user = await Account.findOne({
+      _id : product.createdBy.account_id
+    });
+
+    if(user){
+      product.accountFullName = user.fullName;
+    }
+  }
   // console.log(products);
   res.render("admin/pages/products/index.pug", {
     pageTitle: "Trang danh sách sản phẩm",
@@ -136,6 +147,7 @@ module.exports.deleteItem = async (req, res) => {
 
 // [GET] /admin/products/create
 module.exports.create =  async(req, res) => {
+  console.log(res.locals.user);
   let find = {
     delete : false
   }
@@ -167,6 +179,9 @@ module.exports.createPost =  async(req, res) => {
   // if(req.file){
   //   req.body.thumbnail = `/uploads/${req.file.filename}`;
   // }
+  req.body.createdBy = {
+    account_id: res.locals.user.id
+  }
   const product = new Product(req.body);
   await product.save();
     res.redirect(`${systemConfig.prefixAdmin}/products`);

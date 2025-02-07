@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require('path');
+const moment = require("moment");
 require('dotenv').config();
 const routeAdmin = require("./routes/admin/index.route");
 const route = require("./routes/client/index.route");
@@ -34,7 +35,7 @@ app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce
 
 //App Local Variable
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
-
+app.locals.moment = moment;
 app.use(express.static(`${__dirname}/public`));
 
 

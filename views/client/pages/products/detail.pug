@@ -1,48 +1,52 @@
 extends ../../layouts/default.pug  
+include ../../mixins/box-head.pug
 
-block main 
-  .container.my-3 
-    .row 
-      .col-12 
-        if (product.title)
-          h1(class="mb-4 text-primary border-bottom pb-2") #{product.title}
+block main
+  .product-detail
+    .container.my-5
+      .row
+        .col-md-6
+          .inner-thumb
+            img(src=product.thumbnail, alt=product.title, class="img-fluid shadow-sm rounded")
+        .col-md-6
+          .inner-info
+            h1.inner-title.text-primary #{product.title}
 
-        .card.shadow-lg.p-4.mb-4.bg-light.rounded
-          if (product.price)
-            div(class="mb-3 d-flex align-items-center")
-              span(class="me-2 text-muted fw-bold") Giá:
-              b.text-dark #{product.price}$
+            if product.category
+              div.inner-category.mb-2
+                span.text-muted Danh mục: 
+                a(href=`/products/${product.category.slug}`, class="text-decoration-none fw-bold text-success") #{product.category.title}
 
-          if (product.discountPercentage)
-            div(class="mb-3 d-flex align-items-center")
-              span(class="me-2 text-muted fw-bold") Giảm Giá:
-              b.text-success #{product.discountPercentage}%
+            if product.priceNew
+              div.inner-price-new.text-danger.fw-bold.fs-4 #{product.priceNew}$
 
-          if (product.stock)
-            div(class="mb-3 d-flex align-items-center")
-              span(class="me-2 text-muted fw-bold") Còn lại:
-              b.text-dark #{product.stock}
+            if product.price
+              div.inner-price-old.text-muted.text-decoration-line-through #{product.price}$
 
-          if (product.thumbnail)
-            div(class="mb-4 ")
-              img(
-                src=product.thumbnail 
-                class="rounded shadow-sm"
-                style="width: 150px; border: 2px solid #ddd;"
-              )
+            if product.discountPercentage
+              div.inner-percent.text-warning.fw-semibold Giảm tới <span>#{product.discountPercentage}</span>%
 
-          if (product.position)
-            div(class="mb-3 d-flex align-items-center")
-              span(class="me-2 text-muted fw-bold") Vị trí:
-              b.text-dark #{product.position}
+            if product.stock
+              div.inner-stock.text-success.fw-bold Còn lại <span>#{product.stock}</span> sản phẩm
 
-          if (product.description)
-            div(class="mb-3")
-              span(class="text-muted fw-bold") 
-              p.text-dark.mt-2 #{product.description}
+            form(action=`/cart/add/${product.id}`, method="POST")
+              .input-group.my-3
+                input(
+                  type="number"
+                  class="form-control"
+                  name="quantity"
+                  value=1
+                  min=1
+                  max=product.stock
+                )
+                button(
+                  type="submit"
+                  class="btn btn-success fw-bold shadow-sm"
+                ) 🛒 Thêm vào giỏ hàng
 
-          div(class="text-end mt-4")
-            a(
-              href=`${prefixAdmin}/products/edit/${product.id}`
-              class="btn btn-warning btn-sm"
-            ) Sửa
+      hr
+
+      .container.my-5
+        .row 
+          +box-head("Mô tả sản phẩm")
+          .inner-desc.bg-light.p-3.rounded.shadow-sm !{product.description}

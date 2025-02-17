@@ -8,9 +8,20 @@ module.exports.index = async(req, res) => {
         delete: false,
         status: "active"
     }).limit(6);
-   const newProducts = productsHelper.priceNewProduct(productsFeatured);
+    const newProductsFeatured = productsHelper.priceNewProduct(productsFeatured);
+
+    //get latest product list item
+    const productsNew = await Product.find({
+        delete: false,
+        status: "active"
+    }).sort({position: "desc"}).limit(6);
+   const newProductsNew = productsHelper.priceNewProduct(productsNew);
+
     res.render("client/pages/home/index.pug", {
         pageTitle: "Trang chủ",
-        productsFeatured : newProducts
+        productsFeatured : newProductsFeatured,
+        productsNew: newProductsNew
     })
+
+
 }

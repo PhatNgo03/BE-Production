@@ -1,5 +1,7 @@
 const Product = require("../../models/product.model");
-const productsHelper =require("../../helpers/product");
+const ProductCategory = require("../../models/product-category.model");
+const productsHelper = require("../../helpers/product");
+const productsCategoryHelper = require("../../helpers/product-category");
 // [GET] /products
 module.exports.index = async (req, res) => {
     const products = await Product.find({
@@ -38,4 +40,32 @@ module.exports.detail = async (req, res) => {
           req.flash("error", "Đã xảy ra lỗi khi tìm kiếm sản phẩm!");
           res.redirect(`/products`);
         }
+}
+
+// [GET] /products/:slugCategory
+module.exports.category = async (req, res) => {
+  try{
+    const category = await ProductCategory.findOne({
+      slug : req.params.slugCategory,
+      delete: false
+    });
+
+    const listSubCategory = await productsCategoryHelper.getSubCategory(category.id);
+
+    const listSubCategoryId = listSubCategory.map(item => item.id);
+
+    const products = await Product.find({
+      product_category_id : { $in: [category.id, ...listSubCategoryId]},
+      delete: false,
+    }).sort({position:"desc"});
+    const newProducts = productsHelper.priceNewProduct(products);
+
+    res.render("client/pages/products/product", {
+      pageTitle: category.title,
+      products: newProducts,
+    });
+  } catch(error){
+    req.flash("error", "Đã xảy ra lỗi!");
+    res.redirect(`/products`);
+  }
 }

@@ -31,6 +31,14 @@ module.exports.create =  async(req, res) => {
 }
 // [POST] /admin/products/create
 module.exports.createPost =  async(req, res) => {
+  //Phan quyen backend
+  // const permission = res.locals.role.permissions;
+  // if(permission.includes("product-category_create")){
+  //   console.log("Có quyền truy cập");
+  // } else {
+  //   res.send("403");
+  //   return
+  // }
   if(req.body.position == ""){
     const count= await ProductCategory.countDocuments();
     req.body.position = count + 1;

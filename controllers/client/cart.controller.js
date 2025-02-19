@@ -1,47 +1,44 @@
 const Cart = require("../../models/cart.model");
-//  [POST] /cart/adđ/:productId
-module.exports.addPost = async(req, res) => {
+
+//  [POST] /cart/add/:productId
+module.exports.addPost = async (req, res) => {
   const productId = req.params.productId;
   const quantity = parseInt(req.body.quantity);
   const cartId = req.cookies.cartId; 
-  // console.log(productId);
-  // console.log(quantity);
-  // console.log(cartId);
 
-  const cart = await Cart.findOne({
-    _id: cartId
-  })
+  console.log("cartId:", cartId);
 
-  const existProductInCart = cart.products.find(item => item.product_id = productId);
+  if (!cartId) {
+    return res.status(400).json({ error: "Cart ID không hợp lệ hoặc không tồn tại" });
+  }
 
-  if(existProductInCart){
+  const cart = await Cart.findOne({ _id: cartId });
+
+  if (!cart) {
+    return res.status(404).json({ error: "Giỏ hàng không tồn tại" });
+  }
+
+  const existProductInCart = cart.products.find(item => item.product_id === productId);
+
+  if (existProductInCart) {
     const quantityNew = quantity + existProductInCart.quantity;
     console.log(quantityNew);
-    await Cart.updateOne({
-      _id: cartId,
-      "products.product_id" : productId,
-    }, {
-      $set: {
-        "products.$.quantity" : quantityNew
-      }
-    }
-  )
+    await Cart.updateOne(
+      { _id: cartId, "products.product_id": productId },
+      { $set: { "products.$.quantity": quantityNew } }
+    );
   } else {
     const objectCart = {
       product_id: productId,
-      quantity : quantity
+      quantity: quantity
     };
-  
+
     await Cart.updateOne(
-      {
-        _id: cartId,
-      },
-      {
-        $push: {products : objectCart}
-      }
+      { _id: cartId },
+      { $push: { products: objectCart } }
     );
   }
-  
+
   req.flash("success", "Đã thêm sản phẩm vào giỏ hàng thành công");
   res.redirect("back");
-}
+};

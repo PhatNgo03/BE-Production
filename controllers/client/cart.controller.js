@@ -37,7 +37,7 @@ module.exports.addPost = async (req, res) => {
   const quantity = parseInt(req.body.quantity);
   const cartId = req.cookies.cartId; 
 
-  console.log("cartId:", cartId);
+  // console.log("cartId:", cartId);
 
   if (!cartId) {
     return res.status(400).json({ error: "Cart ID không hợp lệ hoặc không tồn tại" });
@@ -53,7 +53,6 @@ module.exports.addPost = async (req, res) => {
 
   if (existProductInCart) {
     const quantityNew = quantity + existProductInCart.quantity;
-    console.log(quantityNew);
     await Cart.updateOne(
       { _id: cartId, "products.product_id": productId },
       { $set: { "products.$.quantity": quantityNew } }
@@ -71,5 +70,41 @@ module.exports.addPost = async (req, res) => {
   }
 
   req.flash("success", "Đã thêm sản phẩm vào giỏ hàng thành công");
+  res.redirect("back");
+};
+
+//  [GET] /cart/update/:productId/:quantity
+module.exports.update = async (req, res) => {
+  const cartId = req.cookies.cartId;
+  const productId = req.params.productId;
+  const quantity = req.params.quantity;
+ 
+  await Cart.updateOne(
+    { _id: cartId, "products.product_id": productId },
+    { $set: { "products.$.quantity": quantity } }
+  );
+  res.redirect("back");
+};
+
+//  [GET] /cart/delete/productId
+module.exports.delete = async (req, res) => {
+  const cartId = req.cookies.cartId;
+  const productId = req.params.productId;
+
+  await Cart.updateOne({ 
+    _id: cartId,
+  },{
+    $pull: {
+      "products": {
+        product_id :productId
+      }
+    }
+  });
+  //c2 xoa item khoi gio hang
+  // const cart = await Cart.findById(cartId);
+  // const indexProduct = cart.products.findIndex(dataIndex => dataIndex.product_id === productId);
+  // cart.products.splice(indexProduct, 1);
+  // await cart.save();
+  req.flash("success", "Đã xóa sản phẩm khỏi giỏ hàng!");
   res.redirect("back");
 };

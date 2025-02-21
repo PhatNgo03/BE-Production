@@ -1,0 +1,70 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+  .container.my-5 
+    .row 
+      .col-12.text-center 
+        +box-head("🎉 Đặt hàng thành công! 🎉")
+    
+    .row 
+      .col-md-8.offset-md-2 
+        .alert.alert-success.text-center.py-4.rounded.shadow-sm
+          h3.text-success.mb-3 🛍️ Chúc mừng bạn đã đặt hàng thành công! 
+          p Chúng tôi sẽ xử lý đơn hàng trong thời gian sớm nhất.
+          p 📦 Đơn hàng sẽ được giao đến bạn trong vòng <b>3-5 ngày</b>.
+
+    if(order)
+      .row.mt-5
+        .col-md-8.offset-md-2 
+          .card.shadow-lg.rounded.border-0
+            .card-header.bg-primary.text-white.py-3 
+              h4.mb-0 📌 Thông tin cá nhân 
+            .card-body.p-4
+              table(class="table table-borderless")
+                tbody 
+                  tr 
+                    td.font-weight-bold Họ tên: 
+                    td.text-muted #{order.userInfo.fullName}
+                  tr
+                    td.font-weight-bold 📞 Số điện thoại: 
+                    td.text-muted #{order.userInfo.phone}
+                  tr 
+                    td.font-weight-bold 🏠 Địa chỉ:
+                    td.text-muted #{order.userInfo.address}
+      
+      .row.mt-4  
+        .col-md-10.offset-md-1
+          .card.shadow-lg.rounded.border-0
+            .card-header.bg-primary.text-white.py-3 
+              h4.mb-0 🛒 Thông tin đơn hàng 
+            .card-body.p-4
+              table(class="table table-bordered table-hover text-center align-middle")
+                thead(class="thead-dark")
+                  tr 
+                    th STT 
+                    th Ảnh 
+                    th Tên 
+                    th Giá 
+                    th Số lượng 
+                    th Tổng tiền 
+                tbody 
+                  if(order.products.length > 0)
+                    each item, index in order.products 
+                      tr 
+                        td #{index + 1}
+                        td 
+                          img(src=item.productInfo.thumbnail, alt=item.productInfo.title, class="rounded shadow-sm", style="width: 70px; height: auto;")
+                        td.text-muted #{item.productInfo.title}
+                        td.text-success.font-weight-bold #{item.priceNew}$
+                        td.text-primary.font-weight-bold #{item.quantity}
+                        td.text-danger.font-weight-bold #{item.totalPrice}$
+                      
+                if(order.products.length > 0)
+                  tr(class="bg-light")
+                    td(colspan="5", class="text-end font-weight-bold text-primary fs-5") 🏷️ Tổng đơn hàng:
+                    td.text-danger.font-weight-bold.fs-5 #{order.totalPrice}$
+
+      .row.mt-5
+        .col-12.text-center
+          a(href="/", class="btn btn-success btn-lg px-5 py-3 fw-bold shadow-sm") 🔙 Quay lại Trang Chủ 🏠

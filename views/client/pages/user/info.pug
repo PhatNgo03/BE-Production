@@ -1,0 +1,31 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(3000)
+  +alert-error(3000)
+  
+  .container.my-5
+    +box-head("Thông tin tài khoản")
+
+    if infoUser
+      .card
+        .card-body
+          h5.card-title Thông tin cá nhân
+          ul.list-group
+            li.list-group-item 
+              strong Họ và tên: 
+              | #{infoUser.fullName}
+            li.list-group-item 
+              strong Email: 
+              | #{infoUser.email}
+            li.list-group-item 
+              strong Số điện thoại: 
+              | #{infoUser.phone}
+            li.list-group-item
+              strong Ảnh đại diện:
+              br
+              img(src=infoUser.avatar, alt="Avatar", width="100")
+    else
+      .alert.alert-danger Không tìm thấy thông tin tài khoản!

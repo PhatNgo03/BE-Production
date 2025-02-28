@@ -78,6 +78,7 @@ module.exports.permissions = async (req, res) => {
     records: records,
   });
 };
+//quan ly don hang admin
 
 // [PATCH] /admin/roles/permissionsPatch"
 module.exports.permissionsPatch = async (req, res) => {

@@ -172,3 +172,17 @@ module.exports.resetPasswordPost =  async(req, res) => {
   res.redirect("/");
   
 }
+
+// [GET] /user/info
+module.exports.info =  async(req, res) => {
+  const tokenUser = req.cookies.tokenUser;
+
+  const infoUser = await User.findOne({
+    tokenUser : tokenUser
+  }).select("-password");
+
+  res.render("client/pages/user/info.pug", {
+    pageTitle: "Thông tin tài khoản",
+    infoUser: infoUser
+  });
+}

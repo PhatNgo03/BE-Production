@@ -68,7 +68,7 @@ module.exports.loginPost = async (req, res) => {
   const cart = await Cart.findOne({
     user_id : user.id
   })
-
+  
   if(cart){
     res.cookie("cartId", cart.id);
   } else {

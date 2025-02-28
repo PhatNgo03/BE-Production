@@ -131,6 +131,4 @@ if(sort){
 //End Clear sort
 }
 
- 
-
 //End Sort

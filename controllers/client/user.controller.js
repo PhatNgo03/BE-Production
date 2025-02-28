@@ -3,6 +3,7 @@ const sendMailHelper = require("../../helpers/sendMail");
 const md5 = require("md5");
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
+const Cart = require("../../models/cart.model");
 //  [GET] /user/register
 module.exports.register = async(req, res) => {
   
@@ -62,7 +63,26 @@ module.exports.loginPost = async (req, res) => {
     res.redirect("back");
     return;
   }
-  res.cookie("tokenUser", user.tokenUser)
+
+  //check cart exist
+  const cart = await Cart.findOne({
+    user_id : user.id
+  })
+
+  if(cart){
+    res.cookie("cartId", cart.id);
+  } else {
+    await Cart.updateOne(
+      {
+      _id: req.cookies.cartId
+      },
+      {
+        user_id : user.id
+      }
+    )
+  }
+ 
+  res.cookie("tokenUser", user.tokenUser);
   res.redirect("/");
 }
 
@@ -70,6 +90,7 @@ module.exports.loginPost = async (req, res) => {
 module.exports.logout = async (req, res) => {
   //xoa token trong cookie
   res.clearCookie("tokenUser");
+  res.clearCookie("cartId");
   res.redirect("/");
 }
 

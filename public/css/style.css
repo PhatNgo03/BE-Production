@@ -263,3 +263,86 @@
     cursor: pointer;
 }
 /*  End Show alert */
+
+/* Chat */
+.container-my-3 {
+    position: relative;
+}
+.chat {
+    width: 360px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: 20px;
+    margin-top: 20px; /* Khoảng cách từ top */
+    margin-bottom: 20px; /* Khoảng cách từ bottom */
+}
+
+.inner-body {
+    max-height: 400px; /* Giới hạn chiều cao */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    
+    /* Ẩn thanh cuộn */
+    scrollbar-width: none; /* Cho Firefox */
+}
+
+/* Ẩn thanh cuộn trên Chrome, Safari */
+.inner-body::-webkit-scrollbar {
+    display: none;
+}
+
+.inner-incoming, .inner-outgoing {
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.inner-incoming {
+    align-self: flex-start;
+    background: #e0e0e0;
+}
+
+.inner-outgoing {
+    align-self: flex-end;
+    background: #e91e63;
+    color: white;
+}
+
+.inner-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.inner-foot {
+    display: flex;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.inner-foot input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+.inner-foot button {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-left: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+  
+/* End Chat */

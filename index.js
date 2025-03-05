@@ -11,9 +11,21 @@ const bodyParser = require('body-parser');
 const flash = require("express-flash");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+//declare socket io
+const http = require('http');
+const { Server } = require("socket.io");
 
 database.connect();
 const app = express();
+
+const server = http.createServer(app);
+
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+    console.log('a user connected', socket.id);
+  });
+
 //override method CRUD 
 app.use(methodOverride('_method'))
 
@@ -51,6 +63,6 @@ app.get("*", (req, res) => {
     });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });

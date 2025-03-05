@@ -324,18 +324,26 @@
 
 .inner-foot {
     display: flex;
+    align-items: center; 
     padding-top: 10px;
     border-top: 1px solid #ddd;
+    width: 100%; 
 }
 
-.inner-foot input {
+.inner-form {
+    display: flex;
+    width: 100%; 
+}
+
+.inner-form input {
     flex: 1;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 20px;
+    width: 100%; 
 }
 
-.inner-foot button {
+.inner-form button {
     background: #e91e63;
     color: white;
     border: none;
@@ -343,6 +351,9 @@
     margin-left: 5px;
     border-radius: 20px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
   
 /* End Chat */

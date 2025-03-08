@@ -270,11 +270,17 @@
 /*  End Show alert */
 
 /* Chat */
+html, body {
+    overflow-x: hidden; /* Ẩn cuộn ngang */
+    margin: 0;
+    padding: 0;
+}
+
 .container-my-3 {
     position: relative;
 }
 .chat {
-    width: 360px;
+    width: 500px; 
     background: white;
     padding: 15px;
     border-radius: 10px;
@@ -282,20 +288,20 @@
     display: flex;
     flex-direction: column;
     margin-left: auto;
-    margin-right: 20px;
+    margin-right: auto; 
     margin-top: 20px;
     margin-bottom: 20px; 
 }
 
+
 .inner-body {
-    max-height: 400px; /* Giới hạn chiều cao */
+    max-height: 400px; 
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 10px;
     
-    /* Ẩn thanh cuộn */
     scrollbar-width: none; 
 }
 
@@ -363,7 +369,22 @@
   
 /* End Chat */
 
-html, body {
-    overflow-x: hidden; /* Ẩn cuộn ngang */
-    width: 100%;
+
+
+/* Emoji icon*/
+.tooltip {
+   visibility: hidden;
 }
+
+.tooltip.shown {
+    visibility: visible;
+    opacity: 1;
+ }
+
+ .button-icon i.fa-face-smile {
+    font-size: 24px; 
+    color: #e91e63; 
+    cursor: pointer; 
+}
+
+/*  End Emoji icon*/

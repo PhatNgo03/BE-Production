@@ -8,7 +8,7 @@ if(formSendData){
     if(content) {
       socket.emit("CLIENT_SEND_MESSAGE", content);
       e.target.elements.content.value = "";
-
+      socket.emit("CLIENT_SEND_TYPING", "hidden");
       // Ẩn popup emoji khi gửi tin
       const tooltip = document.querySelector(".tooltip");
       if (tooltip) {
@@ -23,6 +23,8 @@ if(formSendData){
 socket.on("SERVER_RETURN_MESSAGE", (data) => {
   const myId = document.querySelector("[my-id]").getAttribute("my-id");
   const body = document.querySelector(".chat .inner-body");
+  const boxTyping = document.querySelector(".chat .inner-list-typing");
+
   const div = document.createElement("div");
 
   let htmlFullName = "";
@@ -36,7 +38,8 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
     ${htmlFullName}
      <div class="inner-content">${data.content}</div>
   `;
-  body.appendChild(div);
+  //check cai typing truoc khi them tn vao list 
+  body.insertBefore(div,boxTyping);
   bodyChat.scrollTop = bodyChat.scrollHeight;
 });
 
@@ -50,6 +53,7 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
 //End Scroll chat to bottom
 
 // Show icon chat
+
   //Show popup
   const buttonIcon = document.querySelector('.button-icon');
   if(buttonIcon){
@@ -61,6 +65,16 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
     }
   }
   //End Show popup
+  //Show Typing 
+  var timeOut;
+   const showTyping = () => {
+    socket.emit("CLIENT_SEND_TYPING", "show");
+    clearTimeout(timeOut);
+    timeOut = setTimeout(() => {
+      socket.emit("CLIENT_SEND_TYPING", "hidden");
+    },5000);
+   }
+  //End Show Typing
 
   //Insert icon into input
   const emojiPicker = document.querySelector("emoji-picker");
@@ -71,8 +85,53 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
       const icon = event.detail.unicode;
       inputChat.value = inputChat.value + icon; // giu lại tin nhan neu co + chen icon
 
+      const end = inputChat.value.length;
+      inputChat.setSelectionRange(end, end);
+      inputChat.focus();
+      showTyping();
     });
-  }
-  //End Insert icon into input
+    //Input keyup
+    inputChat.addEventListener("keyup", () => {
+      showTyping();
+    });
+    //End Input keyup
+}
 
+  //End Insert icon into input
 // End Show icon chat
+
+//SERVER_RETURN_TYPING
+const elementListTyping = document.querySelector(".chat .inner-list-typing");
+if(elementListTyping){
+  socket.on("SERVER_RETURN_TYPING", (data) => {
+    console.log(data);
+    if(data.type == "show"){
+      const bodyChat = document.querySelector(".chat .inner-body");
+      const existTyping = elementListTyping.querySelector(`[user-id="${data.userId}"]`);
+      //check da co nguoi typing chua neu co thi ko render ra nhieu lan 
+      if(!existTyping){
+        const boxTyping = document.createElement("div");
+        boxTyping.classList.add("box-typing");
+        boxTyping.setAttribute("user-id", data.userId);
+
+        boxTyping.innerHTML = `
+          <div class="inner-name">${data.fullName}</div>
+          <div class="inner-dots">
+            <span></span>
+            <span></span> 
+            <span></span>
+          </div>
+        `;
+        elementListTyping.appendChild(boxTyping);
+        bodyChat.scrollTop = bodyChat.scrollHeight;
+      }
+    } else {
+      const boxTypingRemove = elementListTyping.querySelector(`[user-id="${data.userId}"]`);
+      if(boxTypingRemove){
+        elementListTyping.removeChild(boxTypingRemove);
+      }
+    }
+  })
+}
+ 
+//End SERVER_RETURN_TYPING

@@ -14,15 +14,22 @@ module.exports.index = async (req, res) => {
         content : content
       });
       await chat.save();
-       //response data to client
+  //response data to client
     _io.emit("SERVER_RETURN_MESSAGE", {
       userId: userId,
       fullName: fullName,
       content: content 
     });
   });
-   
+  // Typing
+  socket.on("CLIENT_SEND_TYPING", async (type) => {
+    socket.broadcast.emit("SERVER_RETURN_TYPING", {
+      userId: userId,
+      fullName: fullName,
+      type: type 
+    });
   });
+});
   //End SOCKET IO
 
   //Get data from db

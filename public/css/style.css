@@ -366,7 +366,75 @@ html, body {
     align-items: center;
     justify-content: center;
 }
-  
+
+.chat .inner-body .inner-images img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: #efefef;
+    padding: 10px;
+    margin: 0 5px 5px 0;
+    border-radius: 5px;
+}
+
+.chat .inner-body .inner-outgoing .inner-images {
+  margin-left: auto;
+  text-align: right;
+}
+.chat .inner-body .inner-outgoing .inner-images img {
+    margin : 0 0 5px 5px;
+}
+
+.chat .inner-preview-images {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto; 
+    gap: 10px; 
+    padding: 10px 0;
+}
+.chat .inner-preview-images .label-container {
+    display: none;
+}
+
+.chat .inner-preview-images .input-container {
+    display: none;
+}
+
+.chat .inner-preview-images .image-preview {
+    display: flex;
+    flex-direction: row; /* Xếp ảnh theo hàng ngang */
+    gap: 10px;
+}
+
+.chat .inner-preview-images .image-preview-item {
+    width: 120px;
+    height: 120px; 
+    background-size: contain;
+    margin: 5px;
+    border-radius: 10px;
+    flex-shrink: 0; /* Ngăn các ảnh bị co lại */
+}
+.chat .inner-preview-images .image-preview-item .image-preview-item-clear-icon {
+    position: absolute;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px; /* Tăng kích thước */
+    height: 24px;
+    font-size: 16px; /* Làm dấu "X" to hơn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Biến thành dạng có thể click */
+    transition: 0.3s;
+}
+
+.chat .inner-preview-images .image-preview-item .delete-btn:hover {
+    background: darkred;
+    transform: scale(1.1); /* Hiệu ứng phóng to khi hover */
+}
+
 /* End Chat */
 
 
@@ -382,6 +450,12 @@ html, body {
  }
 
  .button-icon i.fa-face-smile {
+    font-size: 24px; 
+    color: #e91e63; 
+    cursor: pointer; 
+}
+
+.button-icon i.fa-image{
     font-size: 24px; 
     color: #e91e63; 
     cursor: pointer; 
@@ -436,3 +510,4 @@ html, body {
 }
 
 /* End box typing */
+

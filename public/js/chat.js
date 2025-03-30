@@ -61,7 +61,7 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
     htmlImages += `<div class="inner-images">`;
     
     for (const image of data.images) {
-      htmlImages += `<img src="${image}">`
+      htmlImages += `<img src="${image}" class="inner-images">`
     }
 
     htmlImages += `</div>`;
@@ -73,7 +73,11 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
   `;
   //check cai typing truoc khi them tn vao list 
   body.insertBefore(div,boxTyping);
+
   bodyChat.scrollTop = bodyChat.scrollHeight;
+
+  //Preview Image new
+  const gallery = new Viewer(div);
 });
 
 // End SERVER_RETURN_MESSAGE
@@ -164,7 +168,25 @@ if(elementListTyping){
         elementListTyping.removeChild(boxTypingRemove);
       }
     }
+
+   
   })
 }
  
-//End SERVER_RETURN_TYPING
+//End SERVER_RETURN_TYPING\
+
+ //Review Full Image
+ document.addEventListener("DOMContentLoaded", () => {
+  const imageContainer = document.querySelector(".chat .inner-body");
+  if (imageContainer) {
+      new Viewer(imageContainer, {
+          url: "src", // Xác định thuộc tính chứa ảnh
+          toolbar: true, // Hiển thị thanh công cụ
+          navbar: false, // Ẩn thanh điều hướng ảnh
+          title: false, // Ẩn tiêu đề ảnh
+          loop: false // Không lặp ảnh
+      });
+  }
+});
+
+ //End Review Full Image

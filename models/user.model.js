@@ -15,6 +15,14 @@ const userSchema = new mongoose.Schema({
       type :String,
       default: "active"
     },
+    requestFriends: Array, //List request add friend
+    acceptFriends: Array, //List accept add friend
+    friendList : [
+      {
+        user_id: String, 
+        room_chat_id : String
+      }
+    ],
     delete: {
         type:Boolean,
         default:false

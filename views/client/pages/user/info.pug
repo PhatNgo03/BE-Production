@@ -5,7 +5,7 @@ include ../../mixins/alert.pug
 block main
   +alert-success(3000)
   +alert-error(3000)
-  
+
   .container.my-5
     +box-head("Thông tin tài khoản")
 
@@ -22,10 +22,21 @@ block main
               | #{infoUser.email}
             li.list-group-item 
               strong Số điện thoại: 
-              | #{infoUser.phone}
+              | #{infoUser.phone || "Chưa cập nhật"}
             li.list-group-item
               strong Ảnh đại diện:
               br
-              img(src=infoUser.avatar, alt="Avatar", width="100")
+              if infoUser.avatar
+                img(src=infoUser.avatar, alt="Avatar", width="100")
+              else
+                p Chưa có ảnh đại diện
+
+
+      // Nút chuyển hướng đến trang chỉnh sửa
+      div(class="text-end mt-4")
+        a(
+          href="/user/edit"
+          class="btn btn-warning btn-sm"
+        ) Sửa
     else
       .alert.alert-danger Không tìm thấy thông tin tài khoản!

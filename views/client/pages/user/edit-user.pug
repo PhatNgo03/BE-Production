@@ -1,0 +1,51 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(3000)
+  +alert-error(3000)
+
+  .container.my-5
+    +box-head("Chỉnh sửa thông tin")
+
+    form(action="/user/edit" method="POST" enctype="multipart/form-data")
+      .mb-3
+        label.form-label(for="fullName") Họ và tên:
+        input.form-control(type="text", name="fullName", id="fullName", value=infoUser.fullName)
+
+      .mb-3
+        label.form-label(for="phone") Số điện thoại:
+        input.form-control(type="text", name="phone", id="phone", value=infoUser.phone || "")
+
+      .mb-3(upload-image)
+        label(for="avatar") Ảnh
+        div.custom-file
+          label(for="avatar" class="btn btn-secondary") Chọn tệp
+          input(
+            type="file"
+            class="form-control-file"
+            id="avatar"
+            name="avatar"
+            accept="image/*"
+            upload-image-input
+            style="display: none;"
+          )
+          div(
+            class="image-preview-container"
+          )
+            img(
+              src=infoUser.avatar
+              upload-image-preview
+              class="image-preview"
+            )
+            button.upload-image-remove(
+              upload-image-remove
+              type="button"
+              style="display: none;"
+            ) X
+
+      button.btn.btn-primary(type="submit") Lưu thay đổi
+      a.btn.btn-secondary.ms-2(href="/user/info") Hủy
+    script(src="/admin/js/product.js")
+    script(src="/admin/js/script.js")

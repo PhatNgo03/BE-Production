@@ -207,3 +207,35 @@ module.exports.info =  async(req, res) => {
     infoUser: infoUser
   });
 }
+
+module.exports.editUser = async (req, res) => {
+  const tokenUser = req.cookies.tokenUser;
+  const infoUser = await User.findOne({ tokenUser }).select("-password");
+
+  res.render("client/pages/user/edit-user.pug", {
+    pageTitle: "Chỉnh sửa thông tin",
+    infoUser
+  });
+};
+
+module.exports.updateUser = async (req, res) => {
+  const tokenUser = req.cookies.tokenUser;
+  
+  try {
+    const updateData = {};
+
+    if (req.body.fullName) updateData.fullName = req.body.fullName;
+    if (req.body.phone) updateData.phone = req.body.phone;
+    if (req.body.avatar) updateData.avatar = req.body.avatar;
+    if (Object.keys(updateData).length > 0) {
+      await User.updateOne({ tokenUser }, updateData);
+      req.flash("success", "Cập nhật thông tin thành công!");
+    } else {
+      req.flash("error", "Không có dữ liệu để cập nhật!");
+    }
+  } catch (error) {
+    req.flash("error", "Cập nhật thông tin thất bại!");
+  }
+
+  res.redirect("/user/info");
+};

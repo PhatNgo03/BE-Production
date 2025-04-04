@@ -42,3 +42,17 @@ const listBtnRefuseFriend = document.querySelectorAll("[btn-refuse-friend]");
     });
   }
 //End Function invitation received
+
+// Function accepted friend
+const listBtnAcceptFriend = document.querySelectorAll("[btn-accept-friend]");
+  if(listBtnAcceptFriend.length > 0){
+    listBtnAcceptFriend.forEach(button => {
+      button.addEventListener("click", () => {
+      button.closest(".box-user").classList.add("accepted");
+        const userId =  button.getAttribute("btn-accept-friend"); //get id
+
+        socket.emit("CLIENT_ACCEPT_FRIEND", userId);
+      });
+    });
+  }
+//End Function invitation received

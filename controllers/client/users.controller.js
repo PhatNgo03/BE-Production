@@ -59,3 +59,31 @@ module.exports.request = async(req, res) => {
     users: users
   });
 }
+
+
+
+//  [GET] /users/accept
+module.exports.accept = async(req, res) => {
+  // SOCKET IO
+  usersSocket(res);
+  // End SOCKET IO
+
+  const userId = res.locals.user.id;
+
+  const myUser= await User.findOne({
+    _id: userId,
+  });
+
+  const acceptFriends = myUser.acceptFriends; // danh sach nhung nguoi ket ban
+
+  const users = await User.find({
+    _id: {$in: acceptFriends} ,
+    status: "active",
+    delete: false
+  }).select("id avatar fullName");
+
+ res.render("client/pages/users/accept.pug", {
+   pageTitle: "Lời mời kết bạn",
+   users: users
+ });
+}

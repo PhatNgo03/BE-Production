@@ -76,10 +76,11 @@ const listBtnAcceptFriend = document.querySelectorAll("[btn-accept-friend]");
 //End SERVER_RETURN_LENGTH_ACCEPT_FRIEND
 
 //SERVER_RETURN_INFO_ACCEPT_FRIEND
-const dataUsersAccept = document.querySelector("[data-users-accept]"); 
-if(dataUsersAccept){
-  const userId = dataUsersAccept.getAttribute("data-users-accept");
-  socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
+socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
+  //Logic trang lời mời đã nhận
+  const dataUsersAccept = document.querySelector("[data-users-accept]"); 
+  if(dataUsersAccept){
+    const userId = dataUsersAccept.getAttribute("data-users-accept");
     if(userId === data.userId){
       //Vẽ user vừa kết bạn ra giao diện
       const div  = document.createElement("div");
@@ -123,7 +124,7 @@ if(dataUsersAccept){
           </div>
         </div>
       `;
-
+    
       dataUsersAccept.appendChild(div);
       //Hết vẽ user vừa kết bạn ra giao diện
       
@@ -131,14 +132,41 @@ if(dataUsersAccept){
       const buttonAccept= div.querySelector("[btn-accept-friend]");
       acceptFriends(buttonAccept);
       //Hết chấp nhận lời mời kết bạn
-
+    
       //Hủy lời mời kết bạn
       const buttonRefuse = div.querySelector("[btn-refuse-friend]");
       refuseFriend(buttonRefuse);
       //Hết hủy lời mời kết bạn
     }
-  });
-}
+  }
+
+  //Trang danh sách người dùng
+  const dataUsersNotFriend = document.querySelector("[data-users-not-friend]"); //get list friend
+  if(dataUsersNotFriend){
+    const userId = dataUsersNotFriend.getAttribute("data-users-not-friend"); //get id B
+    if(userId === data.userId){
+      const boxUserRemove = dataUsersNotFriend.querySelector(`[user-id='${data.infoUserA._id}']`); // tim A trong danh sách bạn của B
+
+      if(boxUserRemove) {
+        dataUsersNotFriend.removeChild(boxUserRemove);
+        }
+      }
+    }
+});
+
+// Khi server thông báo B đã chấp nhận, xóa B khỏi danh sách người dùng của A
+socket.on("SERVER_REMOVE_ACCEPTED_USER_FROM_LIST", (data) => {
+  const dataUsersNotFriend = document.querySelector("[data-users-not-friend]");
+  if (dataUsersNotFriend) {
+    const userId = dataUsersNotFriend.getAttribute("data-users-not-friend");
+    if (userId === data.userId) {
+      const boxUserRemove = dataUsersNotFriend.querySelector(`[user-id='${data.infoUserB._id}']`);
+      if (boxUserRemove) {
+        dataUsersNotFriend.removeChild(boxUserRemove);
+      }
+    }
+  }
+});
 
 //End SERVER_RETURN_INFO_ACCEPT_FRIEND
 

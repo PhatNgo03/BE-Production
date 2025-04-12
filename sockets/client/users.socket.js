@@ -152,6 +152,7 @@ module.exports = (res) => {
         }
       });
     }
+
   });
    //Chức năng chấp nhận kết bạn
    socket.on("CLIENT_ACCEPT_FRIEND", async (userId) => {
@@ -203,6 +204,13 @@ module.exports = (res) => {
         }
       });
     }
+    const infoUserB = await User.findOne({
+      _id: myUserId
+    }).select("id avatar fullName");
+    socket.broadcast.emit("SERVER_REMOVE_ACCEPTED_USER_FROM_LIST", {
+      userId: userId, //id A
+      infoUserB: infoUserB
+    });
   });
 
 });

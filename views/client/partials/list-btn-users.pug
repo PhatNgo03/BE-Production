@@ -19,4 +19,9 @@
       class="btn btn-primary m-1"
       href="/users/accept"
       style="min-width: 180px; text-align: center; padding: 10px 15px; border-radius: 5px; transition: all 0.3s ease-in-out;"
-    ) Lời mời kết bạn
+    )
+      | Lời mời kết bạn
+      span(
+        class="badge bg-danger mx-1"
+        badge-users-accept=user.id
+      ) #{user.acceptFriends.length}

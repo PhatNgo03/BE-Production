@@ -15,15 +15,17 @@ const listBtnAddFriend = document.querySelectorAll("[btn-add-friend]");
 
 
 // Function cancel request add friend
+const refuseFriend = (button) => {
+  button.addEventListener("click", () => {
+    button.closest(".box-user").classList.remove("add");
+      const userId =  button.getAttribute("btn-cancel-friend"); //get id
+      socket.emit("CLIENT_CANCEL_FRIEND", userId);
+  });
+};
 const listBtnCancelFriend = document.querySelectorAll("[btn-cancel-friend]");
   if(listBtnCancelFriend.length > 0){
     listBtnCancelFriend.forEach(button => {
-      button.addEventListener("click", () => {
-      button.closest(".box-user").classList.remove("add");
-        const userId =  button.getAttribute("btn-cancel-friend"); //get id
-
-        socket.emit("CLIENT_CANCEL_FRIEND", userId);
-      });
+      refuseFriend(button);
     });
   }
 //End Function cancel request add friend
@@ -44,15 +46,98 @@ const listBtnRefuseFriend = document.querySelectorAll("[btn-refuse-friend]");
 //End Function invitation received
 
 // Function accepted friend
+const  acceptFriends = (button) => {
+  button.addEventListener("click", () => {
+    button.closest(".box-user").classList.add("accepted");
+      const userId =  button.getAttribute("btn-accept-friend"); //get id
+
+      socket.emit("CLIENT_ACCEPT_FRIEND", userId);
+  });
+}
 const listBtnAcceptFriend = document.querySelectorAll("[btn-accept-friend]");
   if(listBtnAcceptFriend.length > 0){
     listBtnAcceptFriend.forEach(button => {
-      button.addEventListener("click", () => {
-      button.closest(".box-user").classList.add("accepted");
-        const userId =  button.getAttribute("btn-accept-friend"); //get id
-
-        socket.emit("CLIENT_ACCEPT_FRIEND", userId);
-      });
+      acceptFriends(button);
     });
   }
 //End Function invitation received
+
+ //SERVER_RETURN_LENGTH_ACCEPT_FRIEND
+ const badgeUsersAccept = document.querySelector("[badge-users-accept]");
+ if(badgeUsersAccept){
+  const userId = badgeUsersAccept.getAttribute("badge-users-accept");
+  socket.on("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", (data) => {
+    if(userId === data.userId){
+      badgeUsersAccept.innerHTML = data.lengthAcceptFriends;
+    }
+  });
+ }
+
+//End SERVER_RETURN_LENGTH_ACCEPT_FRIEND
+
+//SERVER_RETURN_INFO_ACCEPT_FRIEND
+const dataUsersAccept = document.querySelector("[data-users-accept]"); 
+if(dataUsersAccept){
+  const userId = dataUsersAccept.getAttribute("data-users-accept");
+  socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
+    if(userId === data.userId){
+      //Vẽ user vừa kết bạn ra giao diện
+      const div  = document.createElement("div");
+      div.classList.add("col-4");
+      div.innerHTML =  `
+        <div class="box-user">
+          <div class="inner-avatar">
+            <img src=${data.infoUserA.avatar} alt=${data.infoUserA.fullName}>\
+          </div>
+          <div class="inner-info">
+            <div class="inner-name">
+              ${data.infoUserA.fullName}
+            </div>
+            <div class="inner-buttons">
+            <button 
+              class="btn btn-sm btn-primary mx-1" 
+              btn-accept-friend=${data.infoUserA._id}
+            >
+              Chấp nhận
+            </button>
+            <button 
+              class="btn btn-sm btn-secondary mx-1" 
+              btn-refuse-friend=${data.infoUserA._id}
+            >
+              Xóa
+            </button>
+            <button 
+              class="btn btn-sm btn-secondary mx-1" 
+              btn-deleted-friend="" disabled=""
+            >
+              Đã xóa
+            </button>
+            <button 
+              class="btn btn-sm btn-primary mx-1" 
+              btn-accepted-friend="" disabled=""
+            >
+              Đã chấp nhận 
+            </button>
+          </div>
+          </div>
+        </div>
+      `;
+
+      dataUsersAccept.appendChild(div);
+      //Hết vẽ user vừa kết bạn ra giao diện
+      
+      //Chấp nhận lời mời kết bạn
+      const buttonAccept= div.querySelector("[btn-accept-friend]");
+      acceptFriends(buttonAccept);
+      //Hết chấp nhận lời mời kết bạn
+
+      //Hủy lời mời kết bạn
+      const buttonRefuse = div.querySelector("[btn-refuse-friend]");
+      refuseFriend(buttonRefuse);
+      //Hết hủy lời mời kết bạn
+    }
+  });
+}
+
+//End SERVER_RETURN_INFO_ACCEPT_FRIEND
+

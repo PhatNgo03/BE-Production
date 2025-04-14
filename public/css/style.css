@@ -658,7 +658,7 @@ html, body {
   
   .inner-status[status="offline"] {
     color: gray;
-  }
+  } 
 .box-user .inner-status[status="online"]{
     opacity: 1;
 }

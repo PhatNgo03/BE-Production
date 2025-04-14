@@ -11,3 +11,7 @@ if(showAlert){
   })
 }
 //End show alert
+
+//Detect browser or tab closing 
+
+//End Detect browser or tab closing 

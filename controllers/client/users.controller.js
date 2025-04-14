@@ -109,7 +109,6 @@ module.exports.friends = async(req, res) => {
     status: "active",
     delete: false
   }).select("id avatar fullName statusOnline");
-  console.log(users);
  res.render("client/pages/users/friends.pug", {
    pageTitle: "Danh sách bạn bè",
    users: users

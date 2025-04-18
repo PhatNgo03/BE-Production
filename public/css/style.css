@@ -689,3 +689,36 @@ html, body {
     object-fit: cover;
 }
 /* end box-room */
+
+/* create form chat */
+.room-create-page {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .room-create-page .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .room-create-page label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  .room-create-page input.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  .room-create-page .form-check {
+    margin-bottom: 0.5rem;
+  }
+
+  .room-create-page .btn {
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+  }
+/* end create form chat */

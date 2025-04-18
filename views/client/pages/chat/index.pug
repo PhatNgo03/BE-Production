@@ -18,11 +18,11 @@ block main
         .chat(my-id=user.id)
           .inner-head
             //- .inner-avatar EY
-            .inner-name Em Yêu
+            .inner-name 
           .inner-body
             each chat in chats     
               div(class=(chat.user_id == user.id ? "inner-outgoing" : "inner-incoming"))   
-                if(chat.user_id != user.id)                      
+                if(chat.user_id != user.id && chat.infoUser)
                   .inner-name #{chat.infoUser.fullName}
                 if(chat.content)
                   .inner-content #{chat.content}

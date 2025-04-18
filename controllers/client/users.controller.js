@@ -109,6 +109,11 @@ module.exports.friends = async(req, res) => {
     status: "active",
     delete: false
   }).select("id avatar fullName statusOnline");
+  //Tim Thông tin cua nguoi đã là bạn bè
+  for (const user of users) {
+    const infoFriend = friendList.find(friend => friend.user_id === user.id);
+    user.infoFriend = infoFriend;
+  }
  res.render("client/pages/users/friends.pug", {
    pageTitle: "Danh sách bạn bè",
    users: users

@@ -1,5 +1,5 @@
 const User = require("../../models/user.model");
-
+const RoomChat = require("../../models/rooms-chat.model");
 module.exports = (res) => {
 
   //Chuc nang yêu cầu kết bạn
@@ -8,6 +8,7 @@ module.exports = (res) => {
       const myUserId = res.locals.user.id; //Id cua A
       // console.log(myUserId);
       // console.log(userId); // Id của B
+
 
       //Them Id A vào acceptFriends của B
       const existIdAinB =  await User.findOne({
@@ -160,13 +161,43 @@ module.exports = (res) => {
     // console.log(myUserId); IB của B
     // console.log(userId); // Id của A
 
-    //Thêm {user_id, room_chat_id} của A vào friendList của B
-    //Xóa Id A trong acceptFriends của B
+    //Check exist 
     const existIdAinB =  await User.findOne({
       _id: myUserId,
-      acceptFriends: userId
+      acceptFriends: userId //tim xem co id cua B trong danh sach chấp nhận cua a hay chua
     });
 
+    const existIdBinA =  await User.findOne({
+      _id: userId,
+      requestFriends: myUserId //tim xem co id cua B trong danh sach yêu cầu cua a hay chua
+    });
+    //End check exist
+    
+    //Tạo phòng chat chung 
+
+    let roomChat;
+
+    if(existIdAinB && existIdBinA){
+      const dataRoom = {
+        typeRoom : "friend", 
+        users: [
+          {
+            user_id : userId,
+            role: "superAdmin"
+          },
+          {
+            user_id : myUserId,
+            role: "superAdmin"
+          }
+        ],
+      };
+      roomChat = new RoomChat(dataRoom);
+      await roomChat.save();
+    }
+    // Kết thúc tạo phòng chat chung
+
+    //Thêm {user_id, room_chat_id} của A vào friendList của B
+    //Xóa Id A trong acceptFriends của B
     if(existIdAinB){
       await User.updateOne({
         _id: myUserId
@@ -174,7 +205,7 @@ module.exports = (res) => {
         $push: {
           friendList: {
             user_id : userId,
-            room_chat_id: ""
+            room_chat_id: roomChat.id
           }
         },
         $pull: {
@@ -182,12 +213,10 @@ module.exports = (res) => {
         }
       });
     }
+
      //Thêm {user_id, room_chat_id} của B vào friendList của A
     //Xóa Id B trong requestFriends của A
-    const existIdBinA =  await User.findOne({
-      _id: userId,
-      requestFriends: myUserId //tim xem co id cua B trong danh sach cua a hay chua
-    });
+   
 
     if(existIdBinA){
       await User.updateOne({
@@ -196,7 +225,7 @@ module.exports = (res) => {
         $push: {
           friendList: {
             user_id : myUserId,
-            room_chat_id: ""
+            room_chat_id: roomChat.id
           }
         },
         $pull: {

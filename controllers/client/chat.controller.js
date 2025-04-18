@@ -2,18 +2,21 @@ const Chat = require("../../models/chat.model");
 const User = require("../../models/user.model");
 
 const chatSocket = require("../../sockets/client/chat.socket");
-
-// [GET] /chat/
+  
+// [GET] /chat/:roomChatId
 module.exports.index = async (req, res) => {
   try {
-
+    const roomChatId = req.params.roomChatId;
     
     // SOCKET IO
-      chatSocket(res);
+      chatSocket(req, res);
     // End SOCKET IO
 
     // Lấy dữ liệu từ database
-    const chats = await Chat.find({ delete: false });
+    const chats = await Chat.find({ 
+      room_chat_id : roomChatId,
+      delete: false
+    });
     for (const chat of chats) {
       const infoUser = await User.findOne({ _id: chat.user_id }).select("fullName avatar");
       chat.infoUser = infoUser;

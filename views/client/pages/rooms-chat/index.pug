@@ -17,19 +17,18 @@ block main
           class="btn btn-sm btn-success mr-1"
         ) Tạo phòng Chat
     .row 
-      .col-4
-        div(class="box-room")
-          div(class="inner-avatar")
-            img(
-              src="https://robohash.org/hicveldicta.png"
-              alt="Phòng abc"
-            )
-          div(class="inner-info")
-            div(class="inner-name") Phòng ABC 
-            div(class="inner-buttons") 
-              a(
-                href="#"
-                class="btn btn-sm btn-primary mr-1"
-              ) Nhắn tin 
-block script 
-  script(type="module" src="/js/chat.js") 
+      each room in listRoomChat
+        .col-4
+          div(class="box-room")
+            div(class="inner-avatar")
+              img(
+                src="https://robohash.org/hicveldicta.png"
+                alt=room.title
+              )
+            div(class="inner-info")
+              div(class="inner-name") #{room.title}
+              div(class="inner-buttons") 
+                a(
+                  href=`/chat/${room.id}`
+                  class="btn btn-sm btn-primary mr-1"
+                ) Nhắn tin 

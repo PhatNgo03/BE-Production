@@ -9,16 +9,44 @@ block main
 
     include ../../partials/list-btn-users.pug
 
-    .row
-      .col-12
-        +box-head("Chat")
+    .row.mx-3
+        +box-head("Phòng Chat")
     
     .row
-      .col-12
+      .col-12.mx-3
         .chat(my-id=user.id)
-          .inner-head
-            //- .inner-avatar EY
-            .inner-name 
+          .inner-head.d-flex.align-items-center.flex-wrap.gap-3
+            if usersInRoom.length === 1
+              // Chat 1-1
+              - const targetUser = usersInRoom[0];
+              if targetUser.avatar
+                img(src=targetUser.avatar, alt="avatar", class="chat-avatar-mini")
+              if targetUser.fullName
+                span.fw-bold #{targetUser.fullName}
+            else
+              // Avatar nhóm mặc định
+              img(src="/images/group-avatar.png", alt="avatar", class="chat-avatar-mini")
+
+              -
+                const maxNames = 3;
+
+                // Đảm bảo tên người dùng hiện tại luôn có
+                const currentUser = usersInRoom.find(u => u.id === user.id);
+                const otherUsers = usersInRoom.filter(u => u.id !== user.id);
+
+                let displayUsers = currentUser ? [currentUser, ...otherUsers] : otherUsers;
+                // Loại bỏ user trùng (nếu có)
+                displayUsers = Array.from(new Set(displayUsers));
+
+                // Cắt tối đa 3 người
+                const sliced = displayUsers.slice(0, maxNames);
+                const remaining = usersInRoom.length - sliced.length;
+
+                const nameList = sliced.map(u => u.fullName).join(', ');
+              span.fw-bold
+                | #{nameList}
+                if remaining > 0
+                  | , ...
           .inner-body
             each chat in chats     
               div(class=(chat.user_id == user.id ? "inner-outgoing" : "inner-incoming"))   

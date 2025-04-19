@@ -722,3 +722,10 @@ html, body {
     border-radius: 6px;
   }
 /* end create form chat */
+
+.chat-avatar-mini {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }

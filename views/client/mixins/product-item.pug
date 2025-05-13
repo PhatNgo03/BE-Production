@@ -1,3 +1,5 @@
+include ../mixins/format-price.pug
+
 mixin product-item(item)
   .col-4.mb-3 
     .product-item 
@@ -8,6 +10,8 @@ mixin product-item(item)
       .inner-content 
         h3.inner-title 
           a(href=`/products/detail/${item.slug}`) #{item.title}
-        .inner-price-new #{item.priceNew}$
-        .inner-price-old #{item.price}$
+        .inner-price-new  
+          +formatPrice(item.priceNew)
+        .inner-price-old  
+          +formatPrice(item.price)
         .inner-discount -#{item.discountPercentage}%

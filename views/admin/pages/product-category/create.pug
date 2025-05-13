@@ -33,12 +33,6 @@ block main
           option(value="") -- Chọn danh mục cha --
           if(records)
             +select-tree(records)
-      //- input(
-      //-   type="text"
-      //-   class="form-control"
-      //-   id="parent_id"
-      //-   name="parent_id"
-      //- )
       div(class="form-group mb-3") 
           label(for="desc") Mô tả
           textarea(
@@ -112,3 +106,4 @@ block main
           class="btn btn-primary"
         ) Tạo mới
     script(src="/admin/product/product.js")
+    script(src="/admin/js/script.js")

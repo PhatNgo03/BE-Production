@@ -40,15 +40,6 @@ module.exports.index =  async(req, res) => {
     req.query,
     countProducts
   )
-  //c1:
-  // if(req.query.page){
-  //   objectPagination.currentPage = parseInt(req.query.page);
-  // }
-  // objectPagination.skip = (objectPagination.currentPage - 1) * objectPagination.limitItems;
-  // const countProducts = await Product.countDocuments(find);
-  // const totalPage = Math.ceil(countProducts/objectPagination.limitItems);
-  // objectPagination.totalPage = totalPage;
-  // End Pagination 
 
   //Sort 
   let sort = {};
@@ -60,7 +51,6 @@ module.exports.index =  async(req, res) => {
   }
 
   //End sort
-
   
   const products = await Product.find(find)
   .sort(sort)
@@ -77,14 +67,13 @@ module.exports.index =  async(req, res) => {
     }
 
     //get info user updated lasted
-    console.log()
     // const updatedBy = product.updatedBy[product.updatedBy.length-1];
     const updatedBy = product.updatedBy.slice(-1)[0];
     if(updatedBy){
       const userUpdated = await Account.findOne({
         _id: updatedBy.account_id
       });
-      updatedBy.accountFullName = userUpdated.fullName;
+       updatedBy.accountFullName = userUpdated ? userUpdated.fullName : "admin";
     }
   }
 
@@ -198,7 +187,6 @@ module.exports.deleteItem = async (req, res) => {
 
 // [GET] /admin/products/create
 module.exports.create =  async(req, res) => {
-  console.log(res.locals.user);
   let find = {
     delete : false
   }

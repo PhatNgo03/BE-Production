@@ -1,4 +1,4 @@
-const ProductCategory = require("../../models/product-category.model")
+const ProductCategory = require("../../models/product-category.model");
 const systemConfig = require("../../config/system");
 const createTreeHelper = require('../../helpers/createTree');
 // [GET] /admin/product-category
@@ -29,7 +29,7 @@ module.exports.create =  async(req, res) => {
     records : newRecords
 })
 }
-// [POST] /admin/products/create
+// [POST] /admin/product-category/create
 module.exports.createPost =  async(req, res) => {
   //Phan quyen backend
   // const permission = res.locals.role.permissions;
@@ -79,7 +79,7 @@ module.exports.edit =  async(req, res) => {
   }
 };
 
-// [PATCH] /admin/products/edit/:"id"
+// [PATCH] /admin/product-category/edit/:"id"
 module.exports.editPatch = async (req, res) => {
   const id = req.params.id;
   req.body.position = parseInt(req.body.position);
@@ -93,3 +93,22 @@ module.exports.editPatch = async (req, res) => {
   res.redirect("back");
 };
 
+
+// [DELETE] /admin/product-category/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+
+  // await Product.deleteOne({ _id : id });
+  await ProductCategory.updateOne(
+    {_id: id},
+    {
+      delete: true,
+      deletedBy : {
+        account_id: res.locals.user.id,
+        deletedAt: new Date()
+      }
+    }, 
+  );
+  req.flash('success', `Đã xóa sản phẩm thành công!`);
+  res.redirect("back");
+}
